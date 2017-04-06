@@ -51,26 +51,22 @@ public class S3Utils {
 
     static String getSignatureKey(String key, String dateStamp, String regionName, String serviceName, String stringToSign) throws Exception {
         byte[] kSecret = ("AWS4" + key).getBytes("UTF8");
-
         byte[] kDate = HmacSHA256(dateStamp, kSecret);
-
         byte[] kRegion = HmacSHA256(regionName, kDate);
-
         byte[] kService = HmacSHA256(serviceName, kRegion);
-
         byte[] kSigning = HmacSHA256("aws4_request", kService);
-
         byte[] signature = HmacSHA256(stringToSign, kSigning);
-
         return Hex.encodeHexString(signature);
     }
 
     /**
+     * This will generate the Signed Policy for the given bucket with the access
+     * key and secret
      *
-     * @param accessKey
-     * @param secretKey
-     * @param region
-     * @param bucket
+     * @param accessKey S3 access key
+     * @param secretKey S3 secret key
+     * @param region region where the bucket resides
+     * @param bucket the bucket name
      * @return
      */
     public static Map generateSignedPolicy(String accessKey, String secretKey, String region, String bucket) {
